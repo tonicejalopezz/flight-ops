@@ -2,6 +2,7 @@ data/
 *.duckdb
 *.duckdb.wal
 
+.vscode/
 .venv/
 __pycache__/
 *.pyc
