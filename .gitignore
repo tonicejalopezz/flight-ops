@@ -9,6 +9,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
+notebooks/
 transform/dbt_packages/
 transform/dbt_internal_packages/
 transform/target/
