@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: faa
+    schema: raw_faa
+    description: >
+      Registered aircraft in the United States from the Federal Aviation
+      Administration (FAA), loaded by ingestion/src/ingest_faa.py.
+
+    loaded_at_field: loaded_on
+    freshness:
+      warn_after: {count: 8, period: day}
+      error_after: {count: 30, period: day}
+
+    tables:
+      - name: master
+        description: >
+          One row per registered aircraft in the United States, identified by its
+          N-number, with registrant, aircraft, and identifying details. Private
+          aircraft owners can have their registration information withheld.
+
+      - name: acftref
+        description: > 
+          One row per aircraft model reference, with manufacturer, specifications, 
+          and certification details. Shares a one-to-many relationship with the 
+          master table on the manufacturer/model code, as multiple aircraft can be 
+          registered with the same model reference.
+
+      - name: engine
+        description: >
+          One row per engine model, with manufacturer and performance details.
+          Shares a one-to-many relationship with the master table on the engine model
+          code, as multiple aircraft can be registered with the same engine model.
