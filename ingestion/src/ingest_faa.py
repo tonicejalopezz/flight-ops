@@ -3,12 +3,18 @@ import duckdb
 import zipfile
 import requests
 from datetime import datetime, timezone
-from warehouse import db_connection, RAW_DIR, DB_PATH
+from warehouse import db_connection, RAW_DIR, DB_DEV_PATH
 
 FAA_DIR = RAW_DIR / 'faa_releasable_aircraft'
-SCHEMA = 'raw_faa'
+SCHEMA = 'raw'
 
 REQUEST_TIMEOUT = 30
+
+REQ_FILES = {
+    'MASTER.txt'
+    , 'ENGINE.txt'
+    , 'ACFTREF.txt'
+}
 
 def download_zip():
     response = requests.get(
@@ -30,8 +36,10 @@ def load_to_duckdb():
         conn.execute(f'create schema if not exists {SCHEMA}')
         loaded_on = datetime.now(timezone.utc)
 
-        for file in sorted(FAA_DIR.glob('*.txt')):
-            table = file.stem.lower()
+        for name in sorted(REQ_FILES):
+
+            file = FAA_DIR / name
+            table = f'faa_{file.stem.lower()}'
             path = file.as_posix()
 
             try:
@@ -68,7 +76,7 @@ if __name__ == '__main__':
     download_zip()
     print(f'Extracted to {FAA_DIR}')
 
-    print(f'Loading files into {DB_PATH.stem} warehouse in {SCHEMA} schema')
+    print(f'Loading files into {DB_DEV_PATH.stem} warehouse in {SCHEMA} schema')
     load_to_duckdb()
 
     elapsed = (datetime.now(timezone.utc) - start).total_seconds()

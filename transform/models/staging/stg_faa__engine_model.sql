@@ -1,6 +1,6 @@
 with source as (
     select *
-    from {{ source('faa', 'engine') }}
+    from {{ source('faa', 'faa_engine') }}
 )
 
 , cleanse_source as (

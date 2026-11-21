@@ -1,7 +1,7 @@
  with source as (
     select 
         *
-    from {{ source('faa', 'acftref') }}
+    from {{ source('faa', 'faa_acftref') }}
  )
 
 , cleanse_source as (
