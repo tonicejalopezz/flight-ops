@@ -11,8 +11,8 @@ with source as (
         , nullif(trim(mfr), '')     as engine_manufacturer_name        
         , nullif(trim(_type), '')   as engine_type_code
 
-        , try_cast(nullif(trim(horsepower), '') as integer) as engine_horsepower
-        , try_cast(nullif(trim(thrust), '') as integer) as engine_thrust_lbs
+        , nullif(try_cast(nullif(trim(horsepower), '') as integer), 0)  as engine_horsepower
+        , nullif(try_cast(nullif(trim(thrust), '') as integer), 0)      as engine_thrust_lbs
 
         , source_file
         , loaded_on

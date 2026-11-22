@@ -19,12 +19,12 @@ with source as (
         , nullif(trim(country), '')                   as registrant_country
         , nullif(trim(type_registrant), '')            as type_registrant
 
-        , nullif(trim(mfr_mdl_code), '')                          as model_code
-        , nullif(trim(eng_mfr_mdl), '')                           as engine_code
-        , try_cast(nullif(trim(year_mfr), '') as integer)         as year_manufactured
-        , nullif(trim(type_aircraft), '')                         as aircraft_type_code
-        , nullif(trim(type_engine), '')                           as engine_type_code
-        , nullif(trim(status_code), '')                           as status_code
+        , nullif(trim(mfr_mdl_code), '')                                    as model_code
+        , nullif(trim(eng_mfr_mdl), '')                                     as engine_code
+        , nullif(try_cast(nullif(trim(year_mfr), '') as integer), 0)        as year_manufactured
+        , nullif(trim(type_aircraft), '')                                   as aircraft_type_code
+        , nullif(trim(type_engine), '')                                     as engine_type_code
+        , nullif(trim(status_code), '')                                     as status_code
 
         , try_strptime(nullif(trim(cert_issue_date), ''), '%Y%m%d')::date   as cert_issue_date
         , try_strptime(nullif(trim(air_worth_date), ''), '%Y%m%d')::date    as airworthiness_date
