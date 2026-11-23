@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: dim_aircraft
+    description: >
+      One row per registered aircraft in the United States sourced from the
+      Federal Aviation Administration's registration database (zip), refreshed
+      daily at 10:30 PM central time. This model only uses the following files:
+      MASTER.txt, ACFTREF.txt, and ENGINE.txt. Certain columns have been decoded
+      using the attached document at https://registry.faa.gov/database/ardata.pdf.
+
+    columns:
+      - name: aircraft_key
+        description: >
+          Primary key, created using a sha256 hash on icao24.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: icao24
+        description: >
+          Assigned six-decimal character hexadecimal code to aircraft.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: registration
+        description: >
+          Assigned identification number to aircraft, also known as N-number.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: serial_number
+        description: >
+          Assigned serial number to the aircraft by the manufacturer.
+
+      - name: registrant_name
+        description: >
+          Name of the registered owner.
+
+      - name: manufacturer_name
+        description: >
+          Name of the aircraft's manufacturer.
+
+      - name: model_name
+        description: >
+          Name of the aircraft's model and series.
+
+      - name: aircraft_desc
+        description: >
+          Decoded aircraft type description.
+
+      - name: weight_class_desc
+        description: >
+          Decoded weight class description.
+
+      - name: seat_count
+        description: >
+          Max number of seats, null if the source value was zero.
+
+      - name: landing_surface_desc
+        description: >
+          Decoded landing surface type description.
+
+      - name: year_manufactured
+        description: >
+          Year aircraft was manufactured, null if source value was
+          blank or zero.
+
+      - name: engine_count
+        description: >
+          Number of engines on the aircraft.
+
+      - name: engine_manufacturer_name
+        description: >
+          Name of the aircraft's engine manufacturer.
+
+      - name: engine_model_name
+        description: >
+          Name of the aircraft's engine model.
+
+      - name: engine_desc
+        description: >
+          Decoded engine type description.
+
+      - name: engine_thrust_lbs
+        description: >
+          Engine thrust measured in pounds, null if source value was
+          blank or zero.
+
+      - name: engine_horsepower
+        description: >
+          Engine horsepower measured in hp, null if source value was
+          blank or zero.
+
+      - name: status_desc
+        description: >
+          Decoded status code description.
+
+      - name: cert_issue_date
+        description: >
+          Date the registration certificate was issued.
+
+      - name: registration_expires_on
+        description: >
+          Date the registration certificate expires on.
