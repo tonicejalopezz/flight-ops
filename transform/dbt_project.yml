@@ -39,14 +39,14 @@ seeds:
 models:
   flight_ops:
 
-    staging: 
+    staging:
       +materialized: view
       +schema: staging
 
-    intermediate: 
+    intermediate:
       +materialized: view
       +schema: intermediate
 
-    marts: 
+    marts:
       +materialized: view
-      +schema: analytics 
+      +schema: analytics

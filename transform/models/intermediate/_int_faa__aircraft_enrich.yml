@@ -4,9 +4,9 @@ models:
   - name: int_faa__aircraft_enrich
     description: >
       One row per registered aircraft using the master staging model, enriched
-      with attributes from the aircraft and engine staging models. 
+      with attributes from the aircraft and engine staging models.
 
-      Code columns have relationship tests configured to warn when a value does 
+      Code columns have relationship tests configured to warn when a value does
       not exist in its corresponding seed file.
 
     columns:
