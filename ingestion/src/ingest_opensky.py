@@ -1,12 +1,15 @@
 import os
 import json
 import requests
+import duckdb
 from pathlib import Path
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from warehouse import db_connection, RAW_DIR, DB_DEV_PATH
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-RAW_DIR = BASE_DIR / 'data' / 'raw' 
+STATES_OPENSKY_DIR = RAW_DIR / 'states_opensky'
+SCHEMA = 'raw'
+TABLE = 'states_opensky'
 
 load_dotenv()
 
@@ -15,7 +18,7 @@ TOKEN_URL = 'https://auth.opensky-network.org/auth/realms/opensky-network/protoc
 TOKEN_MARGIN_REFRESH = 30
 REQUEST_TIMEOUT = 30
 
-class TokenManager: 
+class TokenManager:
     def __init__(self):
         self.token = None
         self.expires_at = None
@@ -44,7 +47,7 @@ class TokenManager:
 
     def get_token(self):
         
-        if self.token and self.expires_at and datetime.now() < self.expires_at: 
+        if self.token and self.expires_at and datetime.now() < self.expires_at:
             return self.token
         
         return self.refresh_token()
@@ -68,20 +71,103 @@ def get_states():
 
 def store_data(data):
 
-    snapshot = datetime.fromtimestamp(data.get('time'))
+    snapshot = datetime.fromtimestamp(data.get('time'), tz=timezone.utc)
 
-    folder = RAW_DIR / 'states_opensky'
-    folder.mkdir(parents=True, exist_ok=True)
+    STATES_OPENSKY_DIR.mkdir(parents=True, exist_ok=True)
 
-    path = folder / f'states_{snapshot:%Y%m%dT%H%M%S}.json'
+    path = STATES_OPENSKY_DIR / f'states_{snapshot:%Y%m%dT%H%M%S}.json'
     path.write_text(json.dumps(data))
     return path
 
+def load_to_duckdb(path):
+
+    path = Path(path)
+
+    if not path.is_file():
+        raise FileNotFoundError(f'File not found at {path}')
+
+    with db_connection() as conn:
+        conn.execute(f'create schema if not exists {SCHEMA}')
+
+        conn.execute(
+            f"""
+            create table if not exists {SCHEMA}.{TABLE} (
+                snapshot_time     bigint
+                , states          json
+                , source_file     varchar
+                , loaded_on       timestamptz
+            )
+            """
+        )
+
+        before = conn.execute(
+            f'select count(*) from {SCHEMA}.{TABLE} where source_file = ?'
+            , [path.name]
+        ).fetchone()[0]
+
+        loaded_on = datetime.now(timezone.utc)
+
+        try:
+            conn.execute(
+                f"""
+                insert into {SCHEMA}.{TABLE}
+                select
+                    f.time              as snapshot_time
+                    , s.state
+                    , ?::varchar        as source_file
+                    , ?::timestamptz    as loaded_on
+                from read_json(
+                    ?
+                    , columns = {{time:'BIGINT', states:'JSON'}}
+                ) f
+                cross join lateral (
+                    select unnest(from_json(f.states, '["JSON"]')) as state
+                ) as s
+                where not exists (
+                    select 1
+                    from {SCHEMA}.{TABLE} n
+                    where
+                        n.source_file = ?
+                )
+                """
+                , [path.name, loaded_on, path.as_posix(), path.name]
+            )
+
+        except duckdb.Error as e:
+            print(f'Failed to load {path.name}: {e}')
+            return None
+
+        after = conn.execute(
+            f'select count(*) from {SCHEMA}.{TABLE} where source_file = ?'
+            , [path.name]
+        ).fetchone()[0]
+
+        return after - before
+
 if __name__ == '__main__':
 
+    start = datetime.now(timezone.utc)
+    print(f'States OpenSky ingestion started at {start:%Y-%m-%d %H:%M:%S} UTC')
+
+    print('Requesting states API...')
     data = get_states()
+    request_done = datetime.now(timezone.utc)
+    print(f'Response returned in {(request_done - start).total_seconds():.1f} seconds')
+
     path = store_data(data=data)
-
     count = len(data.get('states') or [])
+    print(f'Stored {count} aircraft states in {path}')
 
-    print(f'Saved {count} aircrafts to {path} at {datetime.now()}')
+    print(f'Inserting {path.name} snapshot into {DB_DEV_PATH.stem} warehouse at {SCHEMA} schema and {TABLE} table')
+    inserted = load_to_duckdb(path=path)
+    load_seconds = (datetime.now(timezone.utc) - request_done).total_seconds()
+
+    if inserted is None:
+        print(f'Load failed after {load_seconds:.1f} seconds')
+    elif inserted == 0:
+        print(f'Skipped {path.name}, already loaded')
+    else:
+        print(f'Inserted {inserted} rows in {load_seconds:.1f} seconds')
+
+    elapsed = (datetime.now(timezone.utc) - start).total_seconds()
+    print(f'Done in {elapsed:.1f} seconds')
