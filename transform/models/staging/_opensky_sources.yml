@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: opensky
+    schema: raw
+    description: >
+      Open access of real-world air traffic control data to the public from
+      the OpenSky Network. Data is collected by multiple sensors connected to
+      the internet by volunteers, industrial supporters, andacademic/government
+      organizations.
+
+    tables:
+      - name: states_opensky
+        description: >
+          One row per aircraft state vector, a summary of all tracking information
+          (position, velocity, and identity) at a certain point in time. If the last
+          known position of the airplane is not older than 15 seconds, it's reused.
+          If there is no known prior position or the last known position is older
+          than 15 seconds, then position information is omitted. Same applies for
+          velocity information.

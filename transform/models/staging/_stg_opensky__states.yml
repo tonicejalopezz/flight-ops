@@ -1,0 +1,121 @@
+version: 2
+
+models:
+  - name: stg_opensky__states
+    description: >
+      One row per aircraft state vector from OpenSky's REST API.
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - icao24
+              - snapshot_time
+
+    columns:
+      - name: icao24
+        description: >
+          Unique ICAO 24-bit address of the transponder, as a six-character
+          hexadecimal code.
+        data_tests:
+          - not_null
+
+      - name: callsign
+        description: >
+          Eight character callsign of the vehicle, null if the callsign
+          has not been received.
+
+      - name: origin_country
+        description: >
+          Country name inferred from the ICAO 24-bit address.
+
+      - name: time_position
+        description: >
+          UTC timestamp of the last position update, null if no position
+          was received within the past 15 seconds.
+
+      - name: last_contact
+        description: >
+          UTC timestamp of the last contact with the transponder.
+
+      - name: longitude
+        description: >
+          WGS-84 longitude in decimal degrees, null if no position was received.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -180
+                max_value: 180
+              config:
+                severity: warn
+
+      - name: latitude
+        description: >
+          WGS-84 latitude in decimal degrees, null if no position was received.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -90
+                max_value: 90
+              config:
+                severity: warn
+
+      - name: baro_altitude
+        description: >
+          Barometric altitude in meters, null if not received.
+
+      - name: on_ground
+        description: >
+          True if the position was retrieved from a surface position report,
+          false if not.
+
+      - name: velocity
+        description: >
+          Velocity over ground in m/s, null if not received.
+
+      - name: true_track
+        description: >
+          True track in decimal degrees clockwise from north, null if not received.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 360
+              config:
+                severity: warn
+
+      - name: vertical_rate
+        description: >
+          Vertical rate in m/s, a positive value indicates that the aircraft is
+          climbing and a negative value indicates that it is descending, null if
+          not received.
+
+      - name: geo_altitude
+        description: >
+          Geometric altitude in meters, null if not received.
+
+      - name: squawk
+        description: >
+          The transponder code aka squawk, null if not received.
+
+      - name: spi
+        description: >
+          True if flight status indicates special purpose.
+
+      - name: position_sources
+        description: >
+          Origin of this state's position.
+
+      - name: snapshot_time
+        description: >
+          UTC timestamp of when the state vectors were captured.
+        data_tests:
+          - not_null
+
+      - name: source_file
+        description: >
+          Source file name of the json snapshot.
+
+      - name: loaded_on
+        description: >
+          UTC timestamp the source file was loaded on.
