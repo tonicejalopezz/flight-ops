@@ -79,4 +79,4 @@ models:
 
       - name: loaded_on
         description: >
-          Timestamp the source file was loaded on.
+          UTC timestamp the source file was loaded on.

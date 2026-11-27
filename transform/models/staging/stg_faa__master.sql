@@ -32,7 +32,7 @@ with source as (
         , try_strptime(nullif(trim(last_action_date), ''), '%Y%m%d')::date  as last_action_date
 
         , source_file
-        , loaded_on
+        , loaded_on at time zone 'UTC'                 as loaded_on
 
     from source
 )

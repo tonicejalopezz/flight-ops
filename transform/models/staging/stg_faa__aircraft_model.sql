@@ -22,7 +22,7 @@
         , nullif(trim(tcdataholder), '')   as type_certificate_data_holder
 
         , source_file
-        , loaded_on
+        , loaded_on at time zone 'UTC'     as loaded_on
 
     from source
 )

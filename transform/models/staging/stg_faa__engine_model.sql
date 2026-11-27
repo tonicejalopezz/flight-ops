@@ -15,7 +15,7 @@ with source as (
         , nullif(try_cast(nullif(trim(thrust), '') as integer), 0)      as engine_thrust_lbs
 
         , source_file
-        , loaded_on
+        , loaded_on at time zone 'UTC'      as loaded_on
 
     from source 
 )
