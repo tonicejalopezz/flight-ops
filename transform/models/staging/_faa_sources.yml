@@ -7,10 +7,11 @@ sources:
       Registered aircraft in the United States from the Federal Aviation
       Administration (FAA), loaded by ingestion/src/ingest_faa.py.
 
-    loaded_at_field: loaded_on
-    freshness:
-      warn_after: {count: 8, period: day}
-      error_after: {count: 30, period: day}
+    config:
+      loaded_at_field: loaded_on
+      freshness:
+        warn_after: {count: 8, period: day}
+        error_after: {count: 30, period: day}
 
     tables:
       - name: faa_master

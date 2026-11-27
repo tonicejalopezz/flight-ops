@@ -6,8 +6,9 @@ seeds:
       One row per decoded status code with descriptive context
       from https://registry.faa.gov/database/ardata.pdf.
 
-    meta:
-      last_updated_on: '2026-11-21'
+    config:
+      meta:
+        last_updated_on: '2026-11-21'
 
     columns:
       - name: status_code
