@@ -1,7 +1,7 @@
 version: 2
 
 seeds:
-  - name: faa_landing_surface_type
+  - name: faa_landing_surface_code
     description: >
       One row per decoded landing surface code with descriptive
       context from https://registry.faa.gov/database/ardata.pdf.
