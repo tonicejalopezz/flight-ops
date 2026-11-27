@@ -1,0 +1,133 @@
+version: 2
+
+models:
+  - name: int_faa__aircraft_enrich
+    description: >
+      One row per registered aircraft using the master staging model, enriched
+      with attributes from the aircraft and engine staging models. 
+
+      Code columns have relationship tests configured to warn when a value does 
+      not exist in its corresponding seed file.
+
+    columns:
+      - name: registration
+        description: >
+          Assigned identification number to aircraft, also known as N-number.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: serial_number
+        description: >
+          Assigned serial number to the aircraft by the manufacturer.
+
+      - name: icao24
+        description: >
+          Assigned six-decimal character hexadecimal code to aircraft.
+
+      - name: registrant_name
+        description: >
+          Name of the registered owner.
+
+      - name: status_code
+        description: >
+          Assigned registration status code.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('faa_status_code')
+                field: status_code
+              config:
+                severity: warn
+
+      - name: year_manufactured
+        description: >
+          Year aircraft was manufactured, null if the source value was blank
+          or zero.
+
+      - name: model_name
+        description: >
+          Name of the aircraft's manufacturer, model and series.
+
+      - name: manufacturer_name
+        description: >
+          Name of the aircraft's manufacturer.
+
+      - name: aircraft_type_code
+        description: >
+          Assigned aircraft type code.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('faa_aircraft_type')
+                field: aircraft_type_code
+              config:
+                severity: warn
+
+      - name: landing_surface_code
+        description: >
+          Assigned landing surface code.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('faa_landing_surface_code')
+                field: landing_surface_code
+              config:
+                severity: warn
+
+      - name: weight_class
+        description: >
+          Weight class label.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('faa_weight_class')
+                field: weight_class
+              config:
+                severity: warn
+
+      - name: seat_count
+        description: >
+          Max number of seats, null if the source value was blank or zero.
+
+      - name: engine_count
+        description: >
+          Number of engines on the aircraft, null if the source value was blank
+          or zero.
+
+      - name: engine_model_name
+        description: >
+          Name of the engine model.
+
+      - name: engine_manufacturer_name
+        description: >
+          Name of the engine manufacturer.
+
+      - name: engine_type_code
+        description: >
+          Assigned engine type code.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('faa_engine_type')
+                field: engine_type_code
+              config:
+                severity: warn
+
+      - name: engine_thrust_lbs
+        description: >
+          Engine thrust measured in pounds, null if the source value was blank
+          or zero.
+
+      - name: engine_horsepower
+        description: >
+          Engine horsepower measured in hp, null if the source value was blank
+          or zero.
+
+      - name: cert_issue_date
+        description: >
+          Date the registration certificate was issued.
+
+      - name: registration_expires_on
+        description: >
+          Date the registration certificate expires on.
