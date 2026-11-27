@@ -45,7 +45,7 @@ models:
 
       - name: model_name
         description: >
-          Name of the aircraft's model and series.
+          Name of the aircraft's manufacturer, model and series.
 
       - name: aircraft_desc
         description: >
@@ -57,7 +57,7 @@ models:
 
       - name: seat_count
         description: >
-          Max number of seats, null if the source value was zero.
+          Max number of seats, null if the source value was blank or zero.
 
       - name: landing_surface_desc
         description: >
@@ -65,12 +65,13 @@ models:
 
       - name: year_manufactured
         description: >
-          Year aircraft was manufactured, null if source value was
-          blank or zero.
+          Year aircraft was manufactured, null if the source value was blank
+          or zero.
 
       - name: engine_count
         description: >
-          Number of engines on the aircraft.
+          Number of engines on the aircraft, null if the source value was blank
+          or zero.
 
       - name: engine_manufacturer_name
         description: >
@@ -86,13 +87,13 @@ models:
 
       - name: engine_thrust_lbs
         description: >
-          Engine thrust measured in pounds, null if source value was
-          blank or zero.
+          Engine thrust measured in pounds, null if the source value was blank
+          or zero.
 
       - name: engine_horsepower
         description: >
-          Engine horsepower measured in hp, null if source value was
-          blank or zero.
+          Engine horsepower measured in hp, null if the source value was blank
+          or zero.
 
       - name: status_desc
         description: >
