@@ -1,0 +1,22 @@
+version: 2
+
+seeds:
+  - name: faa_status_code
+    description: >
+      One row per decoded status code with descriptive context
+      from https://registry.faa.gov/database/ardata.pdf.
+
+    meta:
+      last_updated_on: '2026-11-21'
+
+    columns:
+      - name: status_code
+        description: Registration status code.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: description
+        description: Registration status code description.
+        data_tests:
+          - not_null

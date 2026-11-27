@@ -24,7 +24,7 @@ with aircraft_enrich as (
     left join {{ ref('faa_status_code') }} s
         on a.status_code = s.status_code
 
-    left join {{ ref('faa_landing_surface_type') }} l
+    left join {{ ref('faa_landing_surface_code') }} l
         on a.landing_surface_code = l.landing_surface_code
 
     left join  {{ ref('faa_engine_type') }} e

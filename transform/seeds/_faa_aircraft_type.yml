@@ -1,0 +1,22 @@
+version: 2
+
+seeds:
+  - name: faa_aircraft_type
+    description: >
+      One row per decoded aircraft type code with descriptive context
+      from https://registry.faa.gov/database/ardata.pdf.
+
+    meta:
+      last_updated_on: '2026-11-21'
+
+    columns:
+      - name: aircraft_type_code
+        description: Aircraft type code.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: description
+        description: Aircraft type code description.
+        data_tests:
+          - not_null

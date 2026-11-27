@@ -1,0 +1,22 @@
+version: 2
+
+seeds:
+  - name: faa_landing_surface_type
+    description: >
+      One row per decoded landing surface code with descriptive
+      context from https://registry.faa.gov/database/ardata.pdf.
+
+    meta:
+      last_updated_on: '2026-11-21'
+
+    columns:
+      - name: landing_surface_code
+        description: Landing surface code.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: description
+        description: Landing surface code description.
+        data_tests:
+          - not_null

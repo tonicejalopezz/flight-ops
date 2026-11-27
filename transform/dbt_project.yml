@@ -16,6 +16,26 @@ seeds:
   flight_ops:
     +schema: raw
 
+    faa_aircraft_type:
+      +column_types:
+        aircraft_type_code: varchar
+
+    faa_engine_type:
+      +column_types:
+        engine_type_code: varchar
+
+    faa_landing_surface_code:
+      +column_types:
+        landing_surface_code: varchar
+
+    faa_status_code:
+      +column_types:
+        status_code: varchar
+
+    faa_weight_class:
+      +column_types:
+        weight_class: varchar
+
 models:
   flight_ops:
 
