@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_faa__engine_model
+    description: >
+      One row per engine model reference from the FAA ENGINE.txt file.
+
+    columns:
+      - name: engine_code
+        description: >
+          Assigned engine code for the engine model.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: engine_model_name
+        description: >
+          Name of the engine model.
+
+      - name: engine_manufacturer_name
+        description: >
+          Name of the engine manufacturer.
+
+      - name: engine_type_code
+        description: >
+          Assigned engine type code.
+
+      - name: engine_thrust_lbs
+        description: >
+          Engine thrust measured in pounds, null if the value is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+      - name: engine_horsepower
+        description: >
+          Engine horsepower measured in hp, null if the value is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+      - name: source_file
+        description: >
+          Source file name from the zip database download.
+
+      - name: loaded_on
+        description: >
+          Timestamp the source file was loaded on.

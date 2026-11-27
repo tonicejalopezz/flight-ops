@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: stg_faa__aircraft_model
+    description: >
+      One row per aircraft model reference from the FAA ACFTREF.txt file.
+
+    columns:
+      - name: model_code
+        description: >
+          Assigned model code for the aircraft's manufacturer, model
+          and series.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: model_name
+        description: >
+          Name of the aircraft's manufacturer, model and series.
+
+      - name: manufacturer_name
+        description: >
+          Name of the aircraft's manufacturer.
+
+      - name: weight_class
+        description: >
+          Weight class label.
+
+      - name: seat_count
+        description: >
+          Max number of seats, null if the value is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+      - name: engine_count
+        description: >
+          Number of engines on the aircraft, null if the value is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+      - name: cruising_speed_mph
+        description: >
+          Aircraft cruising speed measured in miles per hour, null if the value
+          is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+      - name: landing_surface_code
+        description: >
+          Assigned landing surface code.
+
+      - name: builder_certification_code
+        description: >
+          Assigned builder certification code.
+
+      - name: type_certificate_data_sheet
+        description: >
+          Type certificate data sheet.
+
+      - name: type_certificate_data_holder
+        description: >
+          Type certificate data holder.
+
+      - name: source_file
+        description: >
+          Source file name from the zip database download.
+
+      - name: loaded_on
+        description: >
+          Timestamp the source file was loaded on.

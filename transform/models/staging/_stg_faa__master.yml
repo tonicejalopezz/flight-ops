@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: stg_faa__master
+    description: >
+      One row per registered aircraft from the FAA MASTER.txt file.
+
+    columns:
+      - name: icao24
+        description: >
+          Assigned six-decimal character hexadecimal code to aircraft.
+
+      - name: registration
+        description: >
+          Assigned identification number to aircraft, also known as N-number.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: serial_number
+        description: >
+          Assigned serial number to the aircraft by the manufacturer.
+
+      - name: faa_unique_id
+        description: >
+          Assigned unique identification number.
+
+      - name: registrant_name
+        description: >
+          Name of the registered owner.
+
+      - name: registrant_street
+        description: >
+          Registrant's street address line.
+
+      - name: registrant_street_line_2
+        description: >
+          Additional registrant's street address line.
+
+      - name: registrant_city
+        description: >
+          Registrant's city.
+
+      - name: registrant_state
+        description: >
+          Registrant's state.
+
+      - name: registrant_zip_code
+        description: >
+          Registrant's zipcode.
+
+      - name: registrant_country
+        description: >
+          Registrant's country.
+
+      - name: type_registrant
+        description: >
+          Registrant type code.
+
+      - name: model_code
+        description: >
+          Assigned model code for the aircraft's manufacturer, model
+          and series.
+
+      - name: engine_code
+        description: >
+          Assigned engine code for the engine model.
+
+      - name: year_manufactured
+        description: >
+          Year aircraft was manufactured, null if the value is blank or zero.
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1900
+                max_value: "extract(year from current_date)"
+              config:
+                severity: warn
+
+      - name: aircraft_type_code
+        description: >
+          Assigned aircraft type code.
+
+      - name: engine_type_code
+        description: >
+          Assigned engine type code.
+
+      - name: status_code
+        description: >
+          Assigned registration status code.
+
+      - name: cert_issue_date
+        description: >
+          Date the registration certificate was issued.
+
+      - name: airworthiness_date
+        description: >
+          Date the airworthiness certificate was issued.
+
+      - name: registration_expires_on
+        description: >
+          Date the registration certificate expires on.
+
+      - name: last_action_date
+        description: >
+          Date of the last action on the registration record.
+
+      - name: source_file
+        description: >
+          Source file name from the zip database download.
+
+      - name: loaded_on
+        description: >
+          Timestamp the source file was loaded on.
