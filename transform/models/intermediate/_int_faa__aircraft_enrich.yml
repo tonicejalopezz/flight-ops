@@ -23,7 +23,7 @@ models:
 
       - name: icao24
         description: >
-          Assigned six-decimal character hexadecimal code to aircraft.
+          Assigned six-character hexadecimal code to aircraft.
 
       - name: registrant_name
         description: >

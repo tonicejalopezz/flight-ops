@@ -8,7 +8,7 @@ models:
     columns:
       - name: icao24
         description: >
-          Assigned six-decimal character hexadecimal code to aircraft.
+          Assigned six-character hexadecimal code to aircraft.
         data_tests:
           - unique
           - not_null
