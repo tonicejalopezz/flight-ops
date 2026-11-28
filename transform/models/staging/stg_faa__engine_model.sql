@@ -4,11 +4,11 @@ with source as (
 )
 
 , cleanse_source as (
-    select 
+    select
         nullif(trim(code), '')      as engine_code
         , nullif(trim(model), '')   as engine_model_name
 
-        , nullif(trim(mfr), '')     as engine_manufacturer_name        
+        , nullif(trim(mfr), '')     as engine_manufacturer_name
         , nullif(trim(_type), '')   as engine_type_code
 
         , nullif(try_cast(nullif(trim(horsepower), '') as integer), 0)  as engine_horsepower
@@ -17,8 +17,8 @@ with source as (
         , source_file
         , loaded_on at time zone 'UTC'      as loaded_on
 
-    from source 
+    from source
 )
 
-select * 
+select *
 from cleanse_source

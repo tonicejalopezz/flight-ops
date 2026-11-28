@@ -1,14 +1,14 @@
- with source as (
-    select 
+with source as (
+    select
         *
     from {{ source('faa', 'faa_acftref') }}
- )
+)
 
 , cleanse_source as (
     select
-        nullif(trim(code), '')           as model_code
-        , nullif(trim(model), '')            as model_name
-        
+        nullif(trim(code), '')             as model_code
+        , nullif(trim(model), '')          as model_name
+
         , nullif(trim(mfr), '')            as manufacturer_name
         , nullif(trim(acweight), '')       as weight_class
 
@@ -27,5 +27,5 @@
     from source
 )
 
-select * 
+select *
 from cleanse_source

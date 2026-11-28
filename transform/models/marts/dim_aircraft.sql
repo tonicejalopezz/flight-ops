@@ -3,12 +3,12 @@
 }}
 
 with aircraft_enrich as (
-    select * 
+    select *
     from {{ ref('int_faa__aircraft_enrich') }}
 )
 
 , decoded as (
-    select 
+    select
         a.*
         , w.description             as weight_class_desc
         , s.description             as status_desc

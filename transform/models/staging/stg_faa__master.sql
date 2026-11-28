@@ -6,7 +6,7 @@ with source as (
 , cleanse_source as (
     select
         lower(nullif(trim(mode_s_code_hex), ''))      as icao24
-        , 'N' || trim(nnumber)                        as registration
+        , 'N' || nullif(trim(nnumber), '')            as registration
         , nullif(trim(serial_number), '')             as serial_number
         , nullif(trim(unique_id), '')                 as faa_unique_id
 
@@ -17,7 +17,7 @@ with source as (
         , nullif(trim(state), '')                     as registrant_state
         , nullif(trim(zip_code), '')                  as registrant_zip_code
         , nullif(trim(country), '')                   as registrant_country
-        , nullif(trim(type_registrant), '')            as type_registrant
+        , nullif(trim(type_registrant), '')           as type_registrant
 
         , nullif(trim(mfr_mdl_code), '')                                    as model_code
         , nullif(trim(eng_mfr_mdl), '')                                     as engine_code

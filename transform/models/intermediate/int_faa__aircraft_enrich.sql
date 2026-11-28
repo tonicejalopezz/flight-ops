@@ -4,7 +4,7 @@ with master as (
 )
 
 , aircraft as (
-    select * 
+    select *
     from {{ ref('stg_faa__aircraft_model') }}
 )
 
@@ -29,7 +29,7 @@ with master as (
         , a.weight_class
         , a.seat_count
         , a.engine_count
-        
+
         , e.engine_model_name
         , e.engine_manufacturer_name
         , e.engine_type_code
@@ -38,10 +38,10 @@ with master as (
 
         , m.cert_issue_date
         , m.registration_expires_on
-    
+
     from master m
 
-    left join aircraft a 
+    left join aircraft a
         on m.model_code = a.model_code
 
     left join engine e

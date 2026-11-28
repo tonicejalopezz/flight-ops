@@ -21,10 +21,10 @@ sources:
           aircraft owners can have their registration information withheld.
 
       - name: faa_acftref
-        description: > 
-          One row per aircraft model reference, with manufacturer, specifications, 
-          and certification details. Shares a one-to-many relationship with the 
-          master table on the manufacturer/model code, as multiple aircraft can be 
+        description: >
+          One row per aircraft model reference, with manufacturer, specifications,
+          and certification details. Shares a one-to-many relationship with the
+          master table on the manufacturer/model code, as multiple aircraft can be
           registered with the same model reference.
 
       - name: faa_engine
