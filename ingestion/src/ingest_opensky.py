@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import requests
 import duckdb
@@ -150,24 +151,37 @@ if __name__ == '__main__':
     print(f'States OpenSky ingestion started at {start:%Y-%m-%d %H:%M:%S} UTC')
 
     print('Requesting states API...')
-    data = get_states()
+    try:
+        data = get_states()
+    except requests.RequestException as e:
+        print(f'Request failed: {e}')
+        sys.exit(1)
+
     request_done = datetime.now(timezone.utc)
     print(f'Response returned in {(request_done - start).total_seconds():.1f} seconds')
+
+    if data.get('time') is None:
+        print('Response has no snapshot time, skipped storing and loading')
+        sys.exit(1)
 
     path = store_data(data=data)
     count = len(data.get('states') or [])
     print(f'Stored {count} aircraft states in {path}')
 
-    print(f'Inserting {path.name} snapshot into {DB_DEV_PATH.stem} warehouse at {SCHEMA} schema and {TABLE} table')
-    inserted = load_to_duckdb(path=path)
-    load_seconds = (datetime.now(timezone.utc) - request_done).total_seconds()
-
-    if inserted is None:
-        print(f'Load failed after {load_seconds:.1f} seconds')
-    elif inserted == 0:
-        print(f'Skipped {path.name}, already loaded')
+    if count == 0:
+        print(f'No aircraft states returned, skipped loading {path.name}')
     else:
-        print(f'Inserted {inserted} rows in {load_seconds:.1f} seconds')
+        print(f'Inserting {path.name} snapshot into {DB_DEV_PATH.stem} warehouse at {SCHEMA} schema and {TABLE} table')
+        inserted = load_to_duckdb(path=path)
+        load_seconds = (datetime.now(timezone.utc) - request_done).total_seconds()
+
+        if inserted is None:
+            print(f'Load failed after {load_seconds:.1f} seconds')
+            sys.exit(1)
+        elif inserted == 0:
+            print(f'Skipped {path.name}, already loaded')
+        else:
+            print(f'Inserted {inserted} rows in {load_seconds:.1f} seconds')
 
     elapsed = (datetime.now(timezone.utc) - start).total_seconds()
     print(f'Done in {elapsed:.1f} seconds')
