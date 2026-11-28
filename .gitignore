@@ -15,7 +15,6 @@ notebooks/*
 transform/dbt_packages/
 transform/dbt_internal_packages/
 transform/target/
-transform/dbt_packages/
 transform/logs/
 logs/
 
