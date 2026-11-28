@@ -6,7 +6,7 @@ sources:
     description: >
       Open access of real-world air traffic control data to the public from
       the OpenSky Network. Data is collected by multiple sensors connected to
-      the internet by volunteers, industrial supporters, andacademic/government
+      the internet by volunteers, industrial supporters, and academic/government
       organizations.
 
     tables:
